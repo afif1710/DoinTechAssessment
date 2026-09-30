@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Not Found | ByteSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=clash-display@600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* 404 Hero Styles */
+    .not-found-hero {
+      background: var(--blue-800);
+      position: relative;
+      overflow: hidden;
+      padding-top: 24px;
+      padding-bottom: 120px;
+      color: white;
+      text-align: center;
+    }
+    .not-found-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.08) 79px, rgba(255,255,255,0.08) 80px),
+                        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.08) 79px, rgba(255,255,255,0.08) 80px);
+      pointer-events: none; z-index: 0;
+    }
+    .not-found-content { position: relative; z-index: 2; margin-top: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    
+    .text-404 {
+      font-family: var(--font-heading);
+      font-size: clamp(120px, 15vw, 220px);
+      font-weight: 800;
+      line-height: 1;
+      margin: 0;
+      background: linear-gradient(180deg, #D4FB20 0%, rgba(212,251,32,0) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    
+    .not-found-title {
+      font-family: var(--font-heading);
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      margin-bottom: 16px;
+      max-width: 600px;
+      line-height: 1.1;
+    }
+    
+    .not-found-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 40px;
+    }
+    
+    .btn-home {
+      background: var(--lime-400);
+      color: var(--gray-950);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn-home:hover { opacity: 0.9; }
+
+    /* Navbar override for blue background */
+    .navbar.blue-bg { background: transparent; position: relative; z-index: 10; border: none; }
+    .navbar.blue-bg .navbar__nav a { color: rgba(255,255,255,0.8); }
+    .navbar.blue-bg .navbar__nav a.active { color: white; font-weight: 700; }
+    .navbar.blue-bg .navbar__logo-text { color: white; }
+    .navbar.blue-bg .btn-ghost-dark { color: white; }
+    .navbar.blue-bg .btn-primary { background: transparent; color: white; padding: 0; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <!-- 404 HERO -->
+  <section class="not-found-hero">
+    <div style="max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-pad);">
+      <nav class="navbar blue-bg" style="padding:0;">
+        <div class="navbar__inner" style="justify-content:space-between; display:flex; align-items:center;">
+          <a href="index.html" class="navbar__logo">
+            <div class="navbar__logo-icon"></div>
+            <span class="navbar__logo-text">ByteSpace</span>
+          </a>
+          <ul class="navbar__nav" style="display:flex; gap:32px; list-style:none;">
+            <li><a href="index.html" style="text-decoration:none;">Home</a></li>
+            <li><a href="search.html" style="text-decoration:none;">Courses</a></li>
+            <li><a href="creator-profile.html" style="text-decoration:none;">Creators</a></li>
+          </ul>
+          <div style="display:flex; align-items:center; gap:20px;">
+            <a href="login.html" class="btn-ghost-dark" style="text-decoration:none;font-weight:600;">Sign In</a>
+            <a href="register.html" class="btn-primary" style="text-decoration:none;">Join Us</a>
+            <div style="color:white;cursor:pointer;">👜</div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="not-found-content">
+        <h1 class="text-404">404</h1>
+        <h2 class="not-found-title">The page you are looking for doesn't exist</h2>
+        <p class="not-found-desc">Try to use a correct url or go back to homepage to start again</p>
+        <a href="index.html" class="btn-home">Back to Home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--gray-50);border-top:1px solid var(--gray-100);padding:56px 0 0;">
+    <div style="max-width:var(--container-max);margin:0 auto;padding:0 var(--container-pad);">
+
+      <!-- Top row: logo + newsletter + 3 link columns -->
+      <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;">
+        <!-- Brand + Newsletter -->
+        <div>
+          <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px;">
+            <div class="navbar__logo-icon"></div>
+            <span style="font-family:var(--font-logo);font-size:20px;font-weight:700;color:var(--gray-950);">ByteSpace</span>
+          </a>
+          <p style="color:var(--gray-700);font-size:13px;line-height:1.6;margin-bottom:20px;">Stay Up to date with our latest features and releases by joining our newsletter.</p>
+          <div style="display:flex;background:white;border:1px solid var(--gray-200);border-radius:50px;padding:5px 5px 5px 16px;margin-bottom:10px;">
+            <input type="email" placeholder="Enter your email" style="flex:1;border:none;outline:none;font-size:13px;font-family:var(--font-body);color:var(--gray-700);background:transparent;">
+            <button style="background:var(--lime-400);color:var(--gray-950);border:none;padding:9px 20px;border-radius:50px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--font-heading);">Search</button>
+          </div>
+          <p style="color:var(--gray-400);font-size:11px;">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+        </div>
+
+        <!-- Column 1 -->
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Featured Courses</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Featured Courses</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Featured Categories</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Business</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">IT</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Design</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2 -->
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Development</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Marketing</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Photography</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Finance</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Sport</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3 -->
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Become a Creator</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Affiliate Program</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Contact</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Help</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">About</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div style="border-top:1px solid var(--gray-100);padding:20px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <p style="color:var(--gray-400);font-size:12px;margin:0;">&copy; 2026 ByteSpace. All rights reserved.</p>
+        <div style="display:flex;gap:24px;">
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Privacy Policy</a>
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Terms of Service</a>
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Cookies Settings</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>

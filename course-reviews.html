@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Detail - Reviews | ByteSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=clash-display@600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Header Styles (Same as course-detail) */
+    .course-hero {
+      background: var(--blue-800); position: relative; padding-top: 24px; padding-bottom: 160px; color: white;
+    }
+    .course-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.08) 79px, rgba(255,255,255,0.08) 80px),
+                        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.08) 79px, rgba(255,255,255,0.08) 80px);
+      pointer-events: none; z-index: 0;
+    }
+    .ch-top { position: relative; z-index: 2; margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+    .ch-title { font-family: var(--font-heading); font-size: clamp(28px, 4vw, 36px); font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .ch-subtitle { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 24px; }
+    .ch-author { font-size: 14px; margin-bottom: 24px; }
+    .ch-author span { color: var(--lime-400); font-weight: 600; }
+    
+    .ch-meta-pills { display: flex; gap: 12px; }
+    .ch-meta-pill { background: white; color: var(--gray-950); padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .ch-meta-pill.blue-text { color: var(--blue-800); }
+    .btn-share { background: var(--lime-400); color: var(--gray-950); font-weight: 700; padding: 10px 20px; border-radius: 50px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; font-family: var(--font-heading); }
+
+    /* Main Layout */
+    .course-layout {
+      position: relative; z-index: 5;
+      max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-pad);
+      display: grid; grid-template-columns: 1fr 340px; gap: 40px;
+      margin-top: -120px; margin-bottom: 80px; align-items: flex-start;
+    }
+    .course-main { display: flex; flex-direction: column; }
+    
+    .course-video {
+      width: 100%; border-radius: 20px; overflow: hidden; position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15); margin-bottom: 32px; aspect-ratio: 16/9; background: #ddd;
+    }
+    .course-video img { width: 100%; height: 100%; object-fit: cover; }
+    .play-btn {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 64px; height: 64px; background: rgba(255,255,255,0.9); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Tabs */
+    .course-tabs { display: flex; gap: 12px; margin-bottom: 32px; }
+    .tab-btn {
+      background: white; border: 1px solid var(--gray-200); padding: 10px 24px; border-radius: 50px;
+      font-size: 14px; font-weight: 600; color: var(--gray-700); cursor: pointer; text-decoration: none;
+    }
+    .tab-btn.active { background: var(--lime-400); border-color: var(--lime-400); color: var(--gray-950); }
+
+    /* Tab Content - Reviews */
+    .tab-content h3 { font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--gray-950); margin-bottom: 16px; margin-top: 32px; }
+    .tab-content h3:first-child { margin-top: 0; }
+    .tab-content p { font-size: 14px; color: var(--gray-700); line-height: 1.8; margin-bottom: 24px; }
+
+    /* Rating Summary Box */
+    .rating-summary {
+      display: flex; align-items: center; gap: 32px;
+      border: 1px solid var(--gray-200); border-radius: 16px; padding: 24px; margin-bottom: 40px;
+    }
+    .rs-left {
+      background: var(--lime-400); border-radius: 12px; padding: 24px 32px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .rs-label { font-size: 14px; font-weight: 700; color: var(--gray-950); margin-bottom: 8px; }
+    .rs-score { font-family: var(--font-heading); font-size: 48px; font-weight: 800; color: var(--gray-950); line-height: 1; }
+    
+    .rs-right { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    .rs-row { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--gray-700); }
+    .rs-bar-container { flex: 1; height: 6px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+    .rs-bar-fill { height: 100%; background: var(--lime-400); border-radius: 4px; }
+    .rs-stars { display: flex; gap: 4px; color: var(--gray-950); font-size: 12px; min-width: 60px; }
+    .rs-count { min-width: 30px; text-align: right; }
+
+    /* Reviews Filter */
+    .review-filters { display: flex; gap: 12px; margin-bottom: 32px; }
+    .rf-pill { background: white; border: 1px solid var(--gray-200); padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; color: var(--gray-700); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .rf-pill.active { background: var(--lime-400); border-color: var(--lime-400); color: var(--gray-950); }
+
+    /* Individual Reviews */
+    .review-list { display: flex; flex-direction: column; gap: 24px; }
+    .review-item { border: 1px solid var(--gray-200); border-radius: 16px; padding: 24px; }
+    .ri-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .ri-user { display: flex; gap: 12px; align-items: center; }
+    .ri-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .ri-name { font-weight: 700; font-size: 14px; color: var(--gray-950); }
+    .ri-role { font-size: 12px; color: var(--gray-500); }
+    .ri-time { font-size: 12px; color: var(--gray-400); }
+    
+    .ri-stars { color: var(--gray-950); font-size: 12px; margin-bottom: 12px; letter-spacing: 2px; }
+    .ri-text { font-size: 13px; color: var(--gray-700); line-height: 1.6; margin: 0; }
+
+    /* Right Column (Sidebar) */
+    .course-sidebar { background: white; border-radius: 24px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .cs-title { font-size: 16px; font-weight: 800; color: var(--gray-950); margin-bottom: 20px; }
+    .cs-lessons-list { list-style: none; padding: 0; margin: 0 0 16px 0; }
+    .cs-lesson-item { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; font-size: 13px; }
+    .cs-lesson-left { display: flex; gap: 12px; color: var(--gray-700); }
+    .cs-lesson-num { font-weight: 600; color: var(--gray-400); }
+    .cs-lesson-time { color: var(--blue-800); font-weight: 600; white-space: nowrap; }
+    .cs-more { font-size: 13px; color: var(--gray-400); margin-bottom: 32px; }
+    .cs-price { font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--blue-800); margin-bottom: 16px; }
+    .cs-price span { font-size: 12px; font-weight: 500; color: var(--gray-500); }
+    .btn-enroll { background: var(--lime-400); color: var(--gray-950); font-family: var(--font-heading); font-weight: 700; font-size: 15px; width: 100%; border: none; padding: 14px; border-radius: 50px; cursor: pointer; transition: opacity 0.2s; margin-bottom: 32px; }
+    .btn-enroll:hover { opacity: 0.9; }
+    .cs-includes h4 { font-size: 14px; font-weight: 700; color: var(--gray-950); margin-bottom: 16px; }
+    .cs-inc-list { list-style: none; padding: 0; margin: 0 0 32px 0; }
+    .cs-inc-list li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--gray-700); margin-bottom: 12px; }
+    .cs-inc-icon { color: var(--blue-800); }
+    .cs-creator { border-top: 1px dashed var(--gray-200); padding-top: 24px; }
+    .cs-cr-header { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .cs-cr-header img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .cs-cr-name { font-weight: 700; font-size: 14px; color: var(--gray-950); }
+    .cs-cr-role { font-size: 12px; color: var(--gray-500); }
+    .cs-cr-desc { font-size: 12px; color: var(--gray-700); line-height: 1.6; margin-bottom: 16px; }
+    .btn-profile { background: white; border: 1px solid var(--gray-200); padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 600; color: var(--gray-700); cursor: pointer; text-decoration: none; display: inline-block; }
+
+    /* Navbar override */
+    .navbar.blue-bg { background: transparent; position: relative; z-index: 10; border: none; }
+    .navbar.blue-bg .navbar__nav a { color: rgba(255,255,255,0.8); }
+    .navbar.blue-bg .navbar__nav a.active { color: white; font-weight: 700; }
+    .navbar.blue-bg .navbar__logo-text { color: white; }
+    .navbar.blue-bg .btn-ghost-dark { color: white; }
+    .navbar.blue-bg .btn-primary { background: transparent; color: white; padding: 0; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <section class="course-hero">
+    <div style="max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-pad);">
+      <nav class="navbar blue-bg" style="padding:0;">
+        <div class="navbar__inner" style="justify-content:space-between; display:flex; align-items:center;">
+          <a href="index.html" class="navbar__logo">
+            <div class="navbar__logo-icon"></div>
+            <span class="navbar__logo-text">ByteSpace</span>
+          </a>
+          <ul class="navbar__nav" style="display:flex; gap:32px; list-style:none;">
+            <li><a href="index.html" style="text-decoration:none;">Home</a></li>
+            <li><a href="search.html" class="active" style="text-decoration:none;">Courses</a></li>
+            <li><a href="creator-profile.html" style="text-decoration:none;">Creators</a></li>
+          </ul>
+          <div style="display:flex; align-items:center; gap:20px;">
+            <a href="login.html" class="btn-ghost-dark" style="text-decoration:none;font-weight:600;">Sign In</a>
+            <a href="register.html" class="btn-primary" style="text-decoration:none;">Join Us</a>
+            <div style="color:white;cursor:pointer;">👜</div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="ch-top">
+        <div>
+          <h1 class="ch-title">Build Digital Asset: A Comprehensive Guide</h1>
+          <p class="ch-subtitle">Unlock the Power of Digital Creation with Expert Guidance</p>
+          <div class="ch-author">by <span>purepearl studio</span></div>
+          
+          <div class="ch-meta-pills">
+            <div class="ch-meta-pill">📊 Intermediate</div>
+            <div class="ch-meta-pill blue-text">★ 4.8 (112 reviews)</div>
+            <div class="ch-meta-pill">👥 199 Students</div>
+          </div>
+        </div>
+        <button class="btn-share">🔗 Share</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN LAYOUT -->
+  <div class="course-layout">
+    
+    <!-- LEFT: Video + Tabs Content -->
+    <div class="course-main">
+      <div class="course-video">
+        <img src="assets/images/d6.jpg" alt="Video Placeholder">
+        <div class="play-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--gray-950)"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+
+      <div class="course-tabs">
+        <a href="course-detail.html" class="tab-btn">About</a>
+        <a href="course-lessons.html" class="tab-btn">Lessons</a>
+        <a href="course-reviews.html" class="tab-btn active">Reviews</a>
+      </div>
+
+      <div class="tab-content">
+        <h3>What Learners Are Saying</h3>
+        <p>Discover what our learners have to say about their experience with "Build Digital Assets: A Comprehensive Guide." Read reviews and ratings from individuals who have embarked on the transformative journey of mastering digital asset creation.</p>
+        
+        <div class="rating-summary">
+          <div class="rs-left">
+            <div class="rs-label">Ratings</div>
+            <div class="rs-score">4.7</div>
+          </div>
+          
+          <div class="rs-right">
+            <div class="rs-row">
+              <div class="rs-bar-container"><div class="rs-bar-fill" style="width:75%;"></div></div>
+              <div class="rs-stars">★ ★ ★ ★ ★</div>
+              <div class="rs-count">790</div>
+            </div>
+            <div class="rs-row">
+              <div class="rs-bar-container"><div class="rs-bar-fill" style="width:20%;"></div></div>
+              <div class="rs-stars">★ ★ ★ ★ ☆</div>
+              <div class="rs-count">120</div>
+            </div>
+            <div class="rs-row">
+              <div class="rs-bar-container"><div class="rs-bar-fill" style="width:5%;"></div></div>
+              <div class="rs-stars">★ ★ ★ ☆ ☆</div>
+              <div class="rs-count">21</div>
+            </div>
+            <div class="rs-row">
+              <div class="rs-bar-container"><div class="rs-bar-fill" style="width:2%;"></div></div>
+              <div class="rs-stars">★ ★ ☆ ☆ ☆</div>
+              <div class="rs-count">10</div>
+            </div>
+            <div class="rs-row">
+              <div class="rs-bar-container"><div class="rs-bar-fill" style="width:1%;"></div></div>
+              <div class="rs-stars">★ ☆ ☆ ☆ ☆</div>
+              <div class="rs-count">16</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Individual Reviews:</h3>
+        <div class="review-filters">
+          <button class="rf-pill active">All rating</button>
+          <button class="rf-pill">★ 5</button>
+          <button class="rf-pill">★ 4</button>
+          <button class="rf-pill">★ 3</button>
+          <button class="rf-pill">★ 2</button>
+          <button class="rf-pill">★ 1</button>
+        </div>
+
+        <div class="review-list">
+          <!-- Review 1 -->
+          <div class="review-item">
+            <div class="ri-header">
+              <div class="ri-user">
+                <img src="assets/images/d9.jpg" alt="User Avatar" class="ri-avatar">
+                <div>
+                  <div class="ri-name">PurePearl Studio</div>
+                  <div class="ri-role">UI/UX Designer</div>
+                </div>
+              </div>
+              <div class="ri-time">a year ago</div>
+            </div>
+            <div class="ri-stars">★ ★ ★ ★ ★</div>
+            <p class="ri-text">"The course provided me with a comprehensive understanding of digital asset creation. The lessons were in-depth, practical, and immediately applicable to my work. Highly recommended!"</p>
+          </div>
+          
+          <!-- Review 2 -->
+          <div class="review-item">
+            <div class="ri-header">
+              <div class="ri-user">
+                <img src="assets/images/d9.jpg" alt="User Avatar" class="ri-avatar">
+                <div>
+                  <div class="ri-name">Albert Flores</div>
+                  <div class="ri-role">UI/UX Designer</div>
+                </div>
+              </div>
+              <div class="ri-time">a year ago</div>
+            </div>
+            <div class="ri-stars">★ ★ ★ ★ ★</div>
+            <p class="ri-text">This course transformed my approach to digital design. The combination of theory, hands-on exercises, and real-world applications made it a truly enriching experience. Excited to implement what I've learned!</p>
+          </div>
+          
+          <!-- Review 3 -->
+          <div class="review-item">
+            <div class="ri-header">
+              <div class="ri-user">
+                <img src="assets/images/d9.jpg" alt="User Avatar" class="ri-avatar">
+                <div>
+                  <div class="ri-name">Cody Fisher</div>
+                  <div class="ri-role">UI/UX Designer</div>
+                </div>
+              </div>
+              <div class="ri-time">a year ago</div>
+            </div>
+            <div class="ri-stars">★ ★ ★ ★ ★</div>
+            <p class="ri-text">The project showcase and critique module created a collaborative environment where I could showcase my work, receive valuable feedback, and refine my skills. It added a unique and valuable dimension to the learning process.</p>
+          </div>
+          
+          <!-- Review 4 -->
+          <div class="review-item">
+            <div class="ri-header">
+              <div class="ri-user">
+                <img src="assets/images/d9.jpg" alt="User Avatar" class="ri-avatar">
+                <div>
+                  <div class="ri-name">Brooklyn Simmons</div>
+                  <div class="ri-role">UI/UX Designer</div>
+                </div>
+              </div>
+              <div class="ri-time">a year ago</div>
+            </div>
+            <div class="ri-stars">★ ★ ★ ★ ★</div>
+            <p class="ri-text">The lessons on optimizing digital assets for various platforms were particularly insightful. The course adapts to the evolving digital landscape, and the engaging content kept me motivated throughout.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Sidebar -->
+    <div class="course-sidebar">
+      <h3 class="cs-title">112 Lessons (24 hours)</h3>
+      <ul class="cs-lessons-list">
+        <li class="cs-lesson-item">
+          <div class="cs-lesson-left">
+            <span class="cs-lesson-num">01</span>
+            <span>Introduction to Digital Assets</span>
+          </div>
+          <span class="cs-lesson-time">12 mins</span>
+        </li>
+        <li class="cs-lesson-item">
+          <div class="cs-lesson-left">
+            <span class="cs-lesson-num">02</span>
+            <span>Design Principles for Impacts</span>
+          </div>
+          <span class="cs-lesson-time">21 mins</span>
+        </li>
+        <li class="cs-lesson-item">
+          <div class="cs-lesson-left">
+            <span class="cs-lesson-num">03</span>
+            <span>Advanced Techniques in Digital Creation</span>
+          </div>
+          <span class="cs-lesson-time">16 mins</span>
+        </li>
+      </ul>
+      <div class="cs-more">99 more videos</div>
+      
+      <div class="cs-price">$25 <span>/lifetime</span></div>
+      <button class="btn-enroll">Enroll Now</button>
+      
+      <div class="cs-includes">
+        <h4>This course include</h4>
+        <ul class="cs-inc-list">
+          <li><span class="cs-inc-icon">📄</span> Learning Resources</li>
+          <li><span class="cs-inc-icon">▶</span> Quality Lesson Videos</li>
+          <li><span class="cs-inc-icon">🏆</span> Certificate of Completion</li>
+          <li><span class="cs-inc-icon">💬</span> Private Consultation</li>
+        </ul>
+      </div>
+
+      <div class="cs-creator">
+        <div class="cs-cr-header">
+          <img src="assets/images/d9.jpg" alt="PurePearl Studio">
+          <div>
+            <div class="cs-cr-name">PurePearl Studio</div>
+            <div class="cs-cr-role">Professional Creator</div>
+          </div>
+        </div>
+        <p class="cs-cr-desc">Ready to Dive In? Enroll Now and Start Building Your Digital Future!</p>
+        <a href="creator-profile.html" class="btn-profile">See Full Profile</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--gray-50);border-top:1px solid var(--gray-100);padding:56px 0 0;">
+    <div style="max-width:var(--container-max);margin:0 auto;padding:0 var(--container-pad);">
+      <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;">
+        <div>
+          <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px;">
+            <div class="navbar__logo-icon"></div>
+            <span style="font-family:var(--font-logo);font-size:20px;font-weight:700;color:var(--gray-950);">ByteSpace</span>
+          </a>
+          <p style="color:var(--gray-700);font-size:13px;line-height:1.6;margin-bottom:20px;">Stay Up to date with our latest features and releases by joining our newsletter.</p>
+          <div style="display:flex;background:white;border:1px solid var(--gray-200);border-radius:50px;padding:5px 5px 5px 16px;margin-bottom:10px;">
+            <input type="email" placeholder="Enter your email" style="flex:1;border:none;outline:none;font-size:13px;font-family:var(--font-body);color:var(--gray-700);background:transparent;">
+            <button style="background:var(--lime-400);color:var(--gray-950);border:none;padding:9px 20px;border-radius:50px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--font-heading);">Search</button>
+          </div>
+          <p style="color:var(--gray-400);font-size:11px;">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+        </div>
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Featured Courses</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Featured Courses</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Featured Categories</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Business</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">IT</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Design</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Development</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Marketing</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Photography</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Finance</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Sport</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Become a Creator</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Affiliate Program</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Contact</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Help</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">About</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--gray-100);padding:20px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <p style="color:var(--gray-400);font-size:12px;margin:0;">&copy; 2026 ByteSpace. All rights reserved.</p>
+        <div style="display:flex;gap:24px;">
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Privacy Policy</a>
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Terms of Service</a>
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Cookies Settings</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
