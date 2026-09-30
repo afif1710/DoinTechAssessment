@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Profile | ByteSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=clash-display@600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Header Styles */
+    .profile-hero {
+      background: var(--blue-800);
+      position: relative;
+      overflow: hidden;
+      padding-top: 24px;
+      padding-bottom: 60px;
+      color: white;
+    }
+    .profile-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.08) 79px, rgba(255,255,255,0.08) 80px),
+                        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.08) 79px, rgba(255,255,255,0.08) 80px);
+      pointer-events: none; z-index: 0;
+    }
+    .profile-hero-content { position: relative; z-index: 2; margin-top: 40px; }
+    
+    .profile-header-info { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 24px; }
+    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); object-fit: cover; }
+    .profile-name { font-family: var(--font-heading); font-size: 28px; font-weight: 800; display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+    .creator-badge { background: var(--lime-400); color: var(--gray-950); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 50px; font-family: var(--font-body); }
+    .profile-role { font-size: 14px; color: rgba(255,255,255,0.8); }
+
+    .profile-bio { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 700px; margin-bottom: 32px; }
+
+    .profile-actions { display: flex; justify-content: space-between; align-items: center; }
+    .profile-stats { display: flex; gap: 12px; }
+    .stat-pill { background: white; color: var(--gray-950); font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 50px; display: inline-flex; gap: 6px; }
+    .btn-follow { background: var(--lime-400); color: var(--gray-950); font-family: var(--font-heading); font-weight: 700; font-size: 14px; border: none; padding: 12px 32px; border-radius: 50px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-follow:hover { opacity: 0.9; }
+
+    /* Filters Bar */
+    .filters-bar { padding: 32px 0 32px; display: flex; justify-content: space-between; align-items: center; }
+    .filter-buttons { display: flex; gap: 12px; }
+    .filter-btn { background: white; border: 1px solid var(--gray-200); padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 500; color: var(--gray-700); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .filter-btn:hover { background: var(--gray-50); }
+    
+    /* Results Grid (2 columns for profile) */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+    
+    /* Navbar override for blue background */
+    .navbar.blue-bg { background: transparent; position: relative; z-index: 10; border: none; }
+    .navbar.blue-bg .navbar__nav a { color: rgba(255,255,255,0.8); }
+    .navbar.blue-bg .navbar__nav a.active { color: white; font-weight: 700; }
+    .navbar.blue-bg .navbar__logo-text { color: white; }
+    .navbar.blue-bg .btn-ghost-dark { color: white; }
+    .navbar.blue-bg .btn-primary { background: transparent; color: white; padding: 0; font-weight: 500; }
+    
+    /* Custom Course Card layout to match Figma */
+    .cc {
+      background: white; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-decoration: none; display: block; border: 1px solid transparent; transition: all 0.2s;
+    }
+    .cc:hover { transform: translateY(-4px); border-color: var(--blue-800); }
+    .cc-thumb { position: relative; height: 180px; margin-bottom: 12px; }
+    .cc-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+    .cc-pills { position: absolute; bottom: 10px; left: 10px; display: flex; gap: 6px; }
+    .cc-pill { background: rgba(255,255,255,0.9); font-size: 9px; font-weight: 600; padding: 4px 8px; border-radius: 6px; color: var(--gray-950); }
+    .cc-title { font-size: 15px; font-weight: 700; color: var(--gray-950); margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .cc-author { font-size: 11px; color: var(--gray-400); margin-bottom: 12px; display: block; }
+    .cc-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .cc-badge { background: var(--gray-50); color: var(--gray-700); font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+    .cc-price { font-size: 16px; font-weight: 800; color: var(--blue-800); }
+    .cc-price span { font-size: 10px; font-weight: 400; color: var(--gray-400); }
+  </style>
+</head>
+<body>
+
+  <!-- PROFILE HERO -->
+  <section class="profile-hero">
+    <div style="max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-pad);">
+      <nav class="navbar blue-bg" style="padding:0;">
+        <div class="navbar__inner" style="justify-content:space-between; display:flex; align-items:center;">
+          <a href="index.html" class="navbar__logo">
+            <div class="navbar__logo-icon"></div>
+            <span class="navbar__logo-text">ByteSpace</span>
+          </a>
+          <ul class="navbar__nav" style="display:flex; gap:32px; list-style:none;">
+            <li><a href="index.html" style="text-decoration:none;">Home</a></li>
+            <li><a href="search.html" style="text-decoration:none;">Courses</a></li>
+            <li><a href="creator-profile.html" class="active" style="text-decoration:none;">Creators</a></li>
+          </ul>
+          <div style="display:flex; align-items:center; gap:20px;">
+            <a href="login.html" class="btn-ghost-dark" style="text-decoration:none;font-weight:600;">Sign In</a>
+            <a href="register.html" class="btn-primary" style="text-decoration:none;">Join Us</a>
+            <div style="color:white;cursor:pointer;">👜</div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="profile-hero-content">
+        <div class="profile-header-info">
+          <img src="assets/images/d9.jpg" alt="PurePearl Studio" class="profile-avatar">
+          <div>
+            <h1 class="profile-name">PurePearl Studio <span class="creator-badge">Creator</span></h1>
+            <div class="profile-role">Passionate UI/UX, Web designer</div>
+          </div>
+        </div>
+        
+        <p class="profile-bio">Welcome to the creative world of [Creator's Name]. Here, you'll discover the passion, expertise, and inspiration that drive my creative journey. Let's explore and learn together!<br>Dive into my creative portfolio, showcasing a glimpse of my artistic endeavors. From digital designs to multimedia projects, each piece tells a unique story. Explore the world of creativity with me.</p>
+        
+        <div class="profile-actions">
+          <div class="profile-stats">
+            <div class="stat-pill"><span>3</span> Products</div>
+            <div class="stat-pill"><span>12</span> Followers</div>
+          </div>
+          <button class="btn-follow">Follow</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH LAYOUT -->
+  <div style="max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-pad);">
+    <div class="filters-bar">
+      <div class="filter-buttons">
+        <button class="filter-btn">⚙️ Filter</button>
+        <button class="filter-btn">📊 Level</button>
+        <button class="filter-btn">📁 Category</button>
+      </div>
+      <div>
+        <button class="filter-btn">⇅ Most relevant</button>
+      </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="results-grid">
+      
+      <!-- Card 1 -->
+      <a href="course-detail.html" class="cc">
+        <div class="cc-thumb">
+          <img src="assets/images/d1.jpg" alt="Learn Figma">
+          <div class="cc-pills">
+            <span class="cc-pill">17 Lessons</span>
+            <span class="cc-pill">3 hours 16 mins</span>
+            <span class="cc-pill">59 Comments</span>
+          </div>
+        </div>
+        <div>
+          <div class="cc-title">Learn Figma from Basic <span style="font-size:11px;font-weight:600;color:var(--gray-400);">4.5 ★</span></div>
+          <span class="cc-author">by purepearl studio</span>
+          <div class="cc-meta">
+            <span class="cc-badge">Beginner</span>
+            <div class="fs-avatars" style="margin:0;">
+              <div class="fs-avatar" style="width:20px;height:20px;"><img src="assets/images/d9.jpg" alt="s1"></div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#4A90D9;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">B</div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#E53E3E;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">C</div>
+              <div class="fs-more" style="width:20px;height:20px;font-size:7px;">2K+</div>
+            </div>
+          </div>
+          <div class="cc-price">$25<span>/lifetime</span></div>
+        </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="course-detail.html" class="cc">
+        <div class="cc-thumb">
+          <img src="assets/images/d2.jpg" alt="Build Digital Asset">
+          <div class="cc-pills">
+            <span class="cc-pill">17 Lessons</span>
+            <span class="cc-pill">2 hours 16 mins</span>
+            <span class="cc-pill">59 Comments</span>
+          </div>
+        </div>
+        <div>
+          <div class="cc-title">Build Digital Asset <span style="font-size:11px;font-weight:600;color:var(--gray-400);">4.5 ★</span></div>
+          <span class="cc-author">by purepearl studio</span>
+          <div class="cc-meta">
+            <span class="cc-badge">Beginner</span>
+            <div class="fs-avatars" style="margin:0;">
+              <div class="fs-avatar" style="width:20px;height:20px;"><img src="assets/images/d9.jpg" alt="s1"></div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#4A90D9;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">B</div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#E53E3E;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">C</div>
+              <div class="fs-more" style="width:20px;height:20px;font-size:7px;">2K+</div>
+            </div>
+          </div>
+          <div class="cc-price">$25<span>/lifetime</span></div>
+        </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="course-detail.html" class="cc">
+        <div class="cc-thumb">
+          <img src="assets/images/d6.jpg" alt="Big Data">
+          <div class="cc-pills">
+            <span class="cc-pill">17 Lessons</span>
+            <span class="cc-pill">2 hours 16 mins</span>
+            <span class="cc-pill">59 Comments</span>
+          </div>
+        </div>
+        <div>
+          <div class="cc-title">the Power of Big Data <span style="font-size:11px;font-weight:600;color:var(--gray-400);">4.6 ★</span></div>
+          <span class="cc-author">by purepearl studio</span>
+          <div class="cc-meta">
+            <span class="cc-badge">Beginner</span>
+            <div class="fs-avatars" style="margin:0;">
+              <div class="fs-avatar" style="width:20px;height:20px;"><img src="assets/images/d9.jpg" alt="s1"></div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#4A90D9;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">B</div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#E53E3E;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">C</div>
+              <div class="fs-more" style="width:20px;height:20px;font-size:7px;">2K+</div>
+            </div>
+          </div>
+          <div class="cc-price">$25<span>/lifetime</span></div>
+        </div>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="course-detail.html" class="cc">
+        <div class="cc-thumb">
+          <img src="assets/images/d3.jpg" alt="Productivity">
+          <div class="cc-pills">
+            <span class="cc-pill">17 Lessons</span>
+            <span class="cc-pill">2 hours 16 mins</span>
+            <span class="cc-pill">59 Comments</span>
+          </div>
+        </div>
+        <div>
+          <div class="cc-title">Balancing Productivity an... <span style="font-size:11px;font-weight:600;color:var(--gray-400);">4.5 ★</span></div>
+          <span class="cc-author">by purepearl studio</span>
+          <div class="cc-meta">
+            <span class="cc-badge">Beginner</span>
+            <div class="fs-avatars" style="margin:0;">
+              <div class="fs-avatar" style="width:20px;height:20px;"><img src="assets/images/d9.jpg" alt="s1"></div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#4A90D9;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">B</div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#E53E3E;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">C</div>
+              <div class="fs-more" style="width:20px;height:20px;font-size:7px;">2K+</div>
+            </div>
+          </div>
+          <div class="cc-price">$25<span>/lifetime</span></div>
+        </div>
+      </a>
+
+      <!-- Card 5 -->
+      <a href="course-detail.html" class="cc">
+        <div class="cc-thumb">
+          <img src="assets/images/d5.jpg" alt="Money">
+          <div class="cc-pills">
+            <span class="cc-pill">17 Lessons</span>
+            <span class="cc-pill">2 hours 16 mins</span>
+            <span class="cc-pill">59 Comments</span>
+          </div>
+        </div>
+        <div>
+          <div class="cc-title">Mastering Money Manage... <span style="font-size:11px;font-weight:600;color:var(--gray-400);">4.5 ★</span></div>
+          <span class="cc-author">by purepearl studio</span>
+          <div class="cc-meta">
+            <span class="cc-badge">Beginner</span>
+            <div class="fs-avatars" style="margin:0;">
+              <div class="fs-avatar" style="width:20px;height:20px;"><img src="assets/images/d9.jpg" alt="s1"></div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#4A90D9;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">B</div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#E53E3E;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">C</div>
+              <div class="fs-more" style="width:20px;height:20px;font-size:7px;">2K+</div>
+            </div>
+          </div>
+          <div class="cc-price">$25<span>/lifetime</span></div>
+        </div>
+      </a>
+
+      <!-- Card 6 -->
+      <a href="course-detail.html" class="cc">
+        <div class="cc-thumb">
+          <img src="assets/images/d4.jpg" alt="Startup">
+          <div class="cc-pills">
+            <span class="cc-pill">17 Lessons</span>
+            <span class="cc-pill">2 hours 16 mins</span>
+            <span class="cc-pill">59 Comments</span>
+          </div>
+        </div>
+        <div>
+          <div class="cc-title">From Idea to Startup Succ... <span style="font-size:11px;font-weight:600;color:var(--gray-400);">4.5 ★</span></div>
+          <span class="cc-author">by purepearl studio</span>
+          <div class="cc-meta">
+            <span class="cc-badge">Beginner</span>
+            <div class="fs-avatars" style="margin:0;">
+              <div class="fs-avatar" style="width:20px;height:20px;"><img src="assets/images/d9.jpg" alt="s1"></div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#4A90D9;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">B</div>
+              <div class="fs-avatar" style="width:20px;height:20px;background:#E53E3E;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:700;">C</div>
+              <div class="fs-more" style="width:20px;height:20px;font-size:7px;">2K+</div>
+            </div>
+          </div>
+          <div class="cc-price">$25<span>/lifetime</span></div>
+        </div>
+      </a>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--gray-50);border-top:1px solid var(--gray-100);padding:56px 0 0;">
+    <div style="max-width:var(--container-max);margin:0 auto;padding:0 var(--container-pad);">
+
+      <!-- Top row: logo + newsletter + 3 link columns -->
+      <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;">
+        <!-- Brand + Newsletter -->
+        <div>
+          <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px;">
+            <div class="navbar__logo-icon"></div>
+            <span style="font-family:var(--font-logo);font-size:20px;font-weight:700;color:var(--gray-950);">ByteSpace</span>
+          </a>
+          <p style="color:var(--gray-700);font-size:13px;line-height:1.6;margin-bottom:20px;">Stay Up to date with our latest features and releases by joining our newsletter.</p>
+          <div style="display:flex;background:white;border:1px solid var(--gray-200);border-radius:50px;padding:5px 5px 5px 16px;margin-bottom:10px;">
+            <input type="email" placeholder="Enter your email" style="flex:1;border:none;outline:none;font-size:13px;font-family:var(--font-body);color:var(--gray-700);background:transparent;">
+            <button style="background:var(--lime-400);color:var(--gray-950);border:none;padding:9px 20px;border-radius:50px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--font-heading);">Search</button>
+          </div>
+          <p style="color:var(--gray-400);font-size:11px;">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+        </div>
+
+        <!-- Column 1 -->
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Featured Courses</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Featured Courses</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Featured Categories</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Business</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">IT</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Design</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2 -->
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Development</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Marketing</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Photography</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Finance</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Sport</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3 -->
+        <div>
+          <h4 style="font-size:13px;font-weight:700;color:var(--gray-950);margin-bottom:16px;">Become a Creator</h4>
+          <ul style="list-style:none;padding:0;">
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Affiliate Program</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Contact</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">Help</a></li>
+            <li style="margin-bottom:10px;"><a href="#" style="color:var(--gray-700);font-size:13px;text-decoration:none;">About</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div style="border-top:1px solid var(--gray-100);padding:20px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <p style="color:var(--gray-400);font-size:12px;margin:0;">&copy; 2026 ByteSpace. All rights reserved.</p>
+        <div style="display:flex;gap:24px;">
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Privacy Policy</a>
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Terms of Service</a>
+          <a href="#" style="color:var(--gray-400);font-size:12px;text-decoration:none;">Cookies Settings</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>

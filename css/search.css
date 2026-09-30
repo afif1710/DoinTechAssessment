@@ -1,0 +1,129 @@
+/* css/search.css */
+.search-header {
+  padding: 140px 0 80px;
+  background-color: var(--blue-800);
+  color: var(--white);
+  text-align: center;
+}
+
+.search-header h1 {
+  margin-bottom: var(--space-sm);
+  color: var(--white);
+}
+
+.search-bar-wrapper {
+  max-width: 600px;
+  margin: var(--space-md) auto 0;
+  display: flex;
+  background: var(--white);
+  border-radius: var(--radius-input);
+  padding: 6px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.search-bar-wrapper input {
+  flex: 1;
+  border: none;
+  padding: 0 20px;
+  font-size: var(--fs-body-m);
+  border-radius: var(--radius-input);
+  background: transparent;
+}
+
+.search-layout {
+  display: flex;
+  gap: var(--space-xl);
+  padding: var(--space-2xl) 0;
+}
+
+.search-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.filter-group {
+  margin-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--gray-100);
+  padding-bottom: var(--space-md);
+}
+
+.filter-group h4 {
+  margin-bottom: var(--space-md);
+  color: var(--gray-950);
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: var(--fs-body-m);
+  color: var(--gray-700);
+  cursor: pointer;
+}
+
+.filter-label input[type="checkbox"],
+.filter-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue-800);
+  cursor: pointer;
+}
+
+.search-results {
+  flex: 1;
+}
+
+.search-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.search-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-md);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: var(--space-xl);
+}
+
+.page-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-700);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.page-btn:hover {
+  border-color: var(--blue-800);
+  color: var(--blue-800);
+}
+
+.page-btn.active {
+  background: var(--blue-800);
+  color: var(--white);
+  border-color: var(--blue-800);
+}
+
+@media (max-width: 992px) {
+  .search-layout {
+    flex-direction: column;
+  }
+  .search-sidebar {
+    width: 100%;
+  }
+}
